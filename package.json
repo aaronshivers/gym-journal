@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "expect": "^24.7.1",
+    "express": "^4.16.4",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
