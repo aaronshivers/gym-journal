@@ -1,0 +1,26 @@
+{
+  "name": "gym-journal",
+  "version": "1.0.0",
+  "description": "An application for tracking exercise progress.",
+  "main": "app.js",
+  "dependencies": {
+    "expect": "^24.7.1",
+    "supertest": "^4.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  },
+  "scripts": {
+    "test": "export NODE_ENV=test && mocha test/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronshivers/gym-journal.git"
+  },
+  "author": "aaron shivers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaronshivers/gym-journal/issues"
+  },
+  "homepage": "https://github.com/aaronshivers/gym-journal#readme"
+}
