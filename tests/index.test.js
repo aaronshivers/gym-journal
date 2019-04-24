@@ -1,7 +1,7 @@
 const request = require('supertest')
 const expect = require('expect')
 
-const app = require('../index')
+const app = require('../app')
 
 describe('/', () => {
   
