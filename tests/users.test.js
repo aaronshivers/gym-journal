@@ -40,7 +40,7 @@ describe('/users', () => {
   })
 
   // DELETE /users/me
-  describe('DELTE /users/me', () => {
+  describe('DELETE /users/me', () => {
     
     it('should respond 401 if user is NOT logged in', async () => {})
     it('should respond 302, delete the user, cookie, and workouts, then redirect to /', async () => {})
