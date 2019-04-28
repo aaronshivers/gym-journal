@@ -2,11 +2,18 @@
 
 ## instalation
 
-1. clone repository
-2. install dependencies
+1. Clone the Repository
+* [instructions](https://help.github.com/en/articles/cloning-a-repository)
 
+2. install dependencies
+ * ```npm i```
+
+## Start
+
+1. Start the Application
+* ```npm run start```
 
 ## testing
 
-1. from the command line
-* npm run test-watch
+1. Run Tests
+* ```npm run test-watch```
