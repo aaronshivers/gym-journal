@@ -5,6 +5,35 @@ const app = require('../app')
 
 describe('/users', () => {
 
+  // GET /users/login
+  describe('GET /users/login', () => {
+    
+    it('should respond 302, and redirect to /users/me, if user is already logged in', async () => {})
+    it('should respond 200', async () => {})
+  })
+
+  // POST /users/login
+  describe('GET /users/login', () => {
+    
+    it('should respond 401, and NOT create token if email is not in the DB', async () => {})
+    it('should respond 401, and NOT create token if password is not correct', async () => {})
+    it('should respond 302, and redirect to /users/me, if user is already logged in', async () => {})
+    it('should respond 302, create token, and redirect to /users/me', async () => {})
+  })
+
+  // GET /users/logout
+  describe('GET /users/logout', () => {
+    
+    it('should logout user, delete auth token, and redirect to /', async () => {})
+  })
+
+  // GET /users/signup
+  describe('GET /users/signup', () => {
+    
+    it('should respond 400, if user is logged in', async () => {})
+    it('should respond 200', async () => {})
+  })
+
   // POST /users
   describe('POST /users', () => {
     
