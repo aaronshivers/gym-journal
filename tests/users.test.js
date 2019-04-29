@@ -13,7 +13,7 @@ describe('/users', () => {
   })
 
   // POST /users/login
-  describe('GET /users/login', () => {
+  describe('POST /users/login', () => {
     
     it('should respond 401, and NOT create token if email is not in the DB', async () => {})
     it('should respond 401, and NOT create token if password is not correct', async () => {})
