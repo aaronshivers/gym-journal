@@ -3,21 +3,25 @@ const mongoose = require('mongoose')
 const {
   MONGO_USER,
   MONGO_PASS,
-  MONGO_SERVER,
-  MONGO_COLLECTION,
+  MONGO_CLUSTER,
   NODE_ENV
 } = process.env
 
 const encodedpass = encodeURIComponent(MONGO_PASS)
-const url = `mongodb://${ MONGO_USER }:${ encodedpass }@${ MONGO_SERVER }/${ MONGO_COLLECTION }`
+const url = `mongodb+srv://${ MONGO_CLUSTER }.mongodb.net`
 
 options = {
   useNewUrlParser: true,
   useCreateIndex: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  retryWrites: true,
+  user: MONGO_USER,
+  pass: encodedpass,
+  dbName: NODE_ENV
 }
 
-mongoose.connect(url, options)
-  .then(() => console.log(`Connected to ${ process.env.NODE_ENV } Database`))
+mongoose.connect(url)
+  .then(() => console.log(`Connected to ${ NODE_ENV } Database`))
+  .catch(err => console.log(err))
 
 module.exports = mongoose

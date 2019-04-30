@@ -4,6 +4,7 @@
   "description": "An application for tracking exercise progress.",
   "main": "app.js",
   "dependencies": {
+    "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "expect": "^24.7.1",
     "express": "^4.16.4",
