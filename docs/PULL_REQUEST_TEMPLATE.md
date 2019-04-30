@@ -23,6 +23,7 @@ Please delete options that are not relevant.
 # Checklist:
 
 - [ ] I have performed a self-review of my own code
+- [ ] I have followed the appropriate [styleguiedes](/CONTRIBUTING.md#styleguides).
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] My changes generate no new errors or warnings
 - [ ] New and existing tests pass locally with my changes
