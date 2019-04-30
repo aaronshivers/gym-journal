@@ -6,6 +6,8 @@ const port = process.env.PORT || 3000
 const indexRoutes = require('./routes/index')
 const usersRoutes = require('./routes/users')
 
+app.set('view engine', 'ejs')
+
 app.use(express.json())
 
 app.use(indexRoutes)
