@@ -16,6 +16,11 @@ This project and everyone participating in it is governed by the [Gym-Journal Co
 
 ## How can I contribute?
 
+[Styleguides](#styleguides)
+  * [JavaScript Styleguide](#javascript-styleguide)
+  * [HTML/CSS Styleguide](#htmlcss-styleguide)
+
+
 ### Reporting Bugs
 This section guides you through submitting a bug report for gym-journal. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
 
