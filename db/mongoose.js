@@ -7,8 +7,8 @@ const {
   NODE_ENV
 } = process.env
 
-const encodedpass = encodeURIComponent(MONGO_PASS)
-const url = `mongodb+srv://${ MONGO_CLUSTER }.mongodb.net`
+const uri = `mongodb+srv://${ MONGO_CLUSTER }.mongodb.net`
+const encodedUri = encodeURI(uri)
 
 options = {
   useNewUrlParser: true,
@@ -16,11 +16,11 @@ options = {
   useFindAndModify: false,
   retryWrites: true,
   user: MONGO_USER,
-  pass: encodedpass,
-  dbName: NODE_ENV
+  pass: MONGO_PASS,
+  dbName: 'test'
 }
 
-mongoose.connect(url)
+mongoose.connect(encodedUri, options)
   .then(() => console.log(`Connected to ${ NODE_ENV } Database`))
   .catch(err => console.log(err))
 

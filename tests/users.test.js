@@ -1,9 +1,34 @@
 const request = require('supertest')
 const expect = require('expect')
+const { ObjectId } = require('mongodb')
 
 const app = require('../app')
+const User = require('../models/users')
 
 describe('/users', () => {
+
+  beforeEach(async () => {
+
+    // delete all users
+    await User.deleteMany()
+
+    // users
+    const users = [{
+      _id: new ObjectId(),
+      email: 'user0@test.net',
+      password: 'asdfASDF1234!@#$',
+      isAdmin: true
+    }, {
+      _id: new ObjectId(),
+      email: 'user1@test.net',
+      password: 'asdfASDF1234!@#$',
+      isAdmin: false
+    }]
+
+    // save users
+    await new User(users[0]).save()
+    await new User(users[1]).save()
+  })
 
   // GET /users/login
   describe('GET /users/login', () => {
@@ -52,7 +77,7 @@ describe('/users', () => {
 
     it('should respond 400, and NOT create user, if password is invalid', async () => {
 
-      const user = { email: 'user@test.net', password: 'pass' }
+      const user = { email: 'user2@test.net', password: 'pass' }
 
       await request(app)
         .post('/users')
@@ -65,7 +90,7 @@ describe('/users', () => {
 
     it('should respond 400, and NOT create user, if user already exists', async () => {
       
-      const user = { email: 'user@test.net', password: 'asdfASDF1234!@#$' }
+      const user = { email: 'user0@test.net', password: 'asdfASDF1234!@#$' }
 
       await request(app)
         .post('/users')
@@ -116,7 +141,7 @@ describe('/users', () => {
 
     it('should respond 401 if email is NOT in the DB', async () => {})
     it('should respond 401 if password is NOT correct', async () => {})
-    it('should respond 302, create token and cookie, and redirect to /users/me', async () => {})
+    // it('should respond 302, create token and cookie, and redirect to /users/me', async () => {})
   })
 
   // GET /users/logout
