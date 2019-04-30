@@ -32,7 +32,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 ### Pull Requests
 
-## Styleguids
+## Styleguides
 
 ### JavaScript Styleguide
 All Javascript must adhere to the [JavaScript Standard Style](https://google.github.io/styleguide/jsguide.html).
