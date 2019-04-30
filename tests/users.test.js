@@ -49,8 +49,33 @@ describe('/users', () => {
           expect(res.header['set-cookie']).toBeFalsy()
         })
     })
-    it('should respond 400, and NOT create user, if password is invalid', async () => {})
-    it('should respond 400, and NOT create user, if user already exists', async () => {})
+
+    it('should respond 400, and NOT create user, if password is invalid', async () => {
+
+      const user = { email: 'user@test.net', password: 'pass' }
+
+      await request(app)
+        .post('/users')
+        .send(user)
+        .expect(400)
+        .expect(res => {
+          expect(res.header['set-cookie']).toBeFalsy()
+        })
+    })
+
+    it('should respond 400, and NOT create user, if user already exists', async () => {
+      
+      const user = { email: 'user@test.net', password: 'asdfASDF1234!@#$' }
+
+      await request(app)
+        .post('/users')
+        .send(user)
+        .expect(400)
+        .expect(res => {
+          expect(res.header['set-cookie']).toBeFalsy()
+        })
+    })
+    
     it('should respond 302, create a new user, and redirect to /users/me', async () => {})
   })
 
