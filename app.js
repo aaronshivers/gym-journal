@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('./db/mongoose')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,6 +13,7 @@ const usersRoutes = require('./routes/users')
 app.set('view engine', 'ejs')
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.use(indexRoutes)
 app.use(usersRoutes)

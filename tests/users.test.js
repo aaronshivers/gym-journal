@@ -101,7 +101,25 @@ describe('/users', () => {
         })
     })
     
-    it('should respond 302, create a new user, and redirect to /users/me', async () => {})
+    it(`should respond 302, hash password, create a new user,
+      token and cookie, then redirect to /users/me`, async () => {
+
+      const user = { email: 'user2@test.net', password: 'asdfASDF1234!@#$' }
+
+      await request(app)
+        .post('/users')
+        .send(user)
+        .expect(302)
+        .expect(res => {
+          expect(res.header.location).toEqual('/users/me')
+          expect(res.header['set-cookie']).toBeTruthy()
+        })
+
+      const foundUser = await User.findOne({ email: user.email })
+      expect(foundUser).toBeTruthy()
+      expect(foundUser.email).toEqual(user.email)
+      expect(foundUser.password).not.toEqual(user.password)
+    })
   })
 
   // GET /users
