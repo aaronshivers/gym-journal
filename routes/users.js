@@ -35,10 +35,10 @@ router.post('/users', validate(userValidator), async (req, res) => {
 
   } catch (error) {
 
-    throw new Error (error)
+    // send error message
+    res.render('error', { msg: error.message })
 
   }
-
 })
 
 // POST /users/login
