@@ -9,6 +9,7 @@ const port = process.env.PORT || 3000
 
 const indexRoutes = require('./routes/index')
 const usersRoutes = require('./routes/users')
+const exercisesRoutes = require('./routes/exercises')
 
 app.set('view engine', 'ejs')
 
@@ -17,6 +18,7 @@ app.use(cookieParser())
 
 app.use(indexRoutes)
 app.use(usersRoutes)
+app.use(exercisesRoutes)
 
 app.listen(port, () => console.log(`Server running on port ${ port }.`))
 
