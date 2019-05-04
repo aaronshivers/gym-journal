@@ -20,7 +20,7 @@ describe('/exercises', () => {
     }, {
       _id: new ObjectId(),
       name: 'Dead Lifts',
-      dscription: 'Great for getting good at lifting heavy things off the floor.'
+      description: 'Great for getting good at lifting heavy things off the floor.'
     }]
 
     // save users
@@ -31,8 +31,15 @@ describe('/exercises', () => {
   // POST /exercises
   describe('POST /exercises', () => {
     
-    it('should respond 401, if user is NOT logged in', async () => {})
-    
+    it('should respond 401, if user is NOT logged in', async () => {
+      const exercise = { name: 'sc', description: 'My favorite' }
+
+      await request(app)
+        .post('/exercises')
+        .send(exercise)
+        .expect(401)
+    })
+
     it('should respond 400, and NOT create exercise, if name is invalid', async () => {
       const exercise = { name: 'sc', description: 'My favorite' }
 
