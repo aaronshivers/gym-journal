@@ -10,6 +10,6 @@ module.exports = userValidator = user => {
       lowercase letter, one uppercase letter, one number, and one special character.`
     })
   })
-  console.log(user)
+
   return Joi.validate(user, schema)
 }

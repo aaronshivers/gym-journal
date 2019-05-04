@@ -7,27 +7,29 @@ const User = require('../models/users')
 
 describe('/users', () => {
 
+  // users list
+  const users = [{
+    _id: new ObjectId(),
+    email: 'user0@test.net',
+    password: 'asdfASDF1234!@#$',
+    isAdmin: true
+  }, {
+    _id: new ObjectId(),
+    email: 'user1@test.net',
+    password: 'asdfASDF1234!@#$',
+    isAdmin: false
+  }]
+
   beforeEach(async () => {
 
     // delete all users
     await User.deleteMany()
 
-    // users
-    const users = [{
-      _id: new ObjectId(),
-      email: 'user0@test.net',
-      password: 'asdfASDF1234!@#$',
-      isAdmin: true
-    }, {
-      _id: new ObjectId(),
-      email: 'user1@test.net',
-      password: 'asdfASDF1234!@#$',
-      isAdmin: false
-    }]
-
     // save users
     await new User(users[0]).save()
     await new User(users[1]).save()
+
+    return users
   })
 
   // GET /users/login
@@ -40,10 +42,45 @@ describe('/users', () => {
   // POST /users/login
   describe('POST /users/login', () => {
     
-    it('should respond 401, and NOT create token if email is not in the DB', async () => {})
-    it('should respond 401, and NOT create token if password is not correct', async () => {})
-    it('should respond 302, and redirect to /users/me, if user is already logged in', async () => {})
-    it('should respond 302, create token, and redirect to /users/me', async () => {})
+    it('should respond 401, and NOT create token if email is not in the DB', async () => {
+
+      const user = { email: 'bob@aol.com', password: 'asdfASDF1234!@#$' }
+
+      await request(app)
+        .post('/users/login')
+        .send(user)
+        .expect(401)
+        .expect(res => {
+          expect(res.header['set-cookie']).toBeFalsy()
+        })
+    })
+
+    it('should respond 401, and NOT create token if password is not correct', async () => {
+
+      const user = { email: users[0].email , password: '1234!@#$asdfASDF' }
+
+      await request(app)
+        .post('/users/login')
+        .send(user)
+        .expect(401)
+        .expect(res => {
+          expect(res.header['set-cookie']).toBeFalsy()
+        })
+    })
+
+    it('should respond 302, create token, and redirect to /users/me', async () => {
+
+      const { email, password } = users[0]
+
+      await request(app)
+        .post('/users/login')
+        .send({ email, password })
+        .expect(302)
+        .expect((res) => {
+          expect(res.header.location).toEqual('/users/me')
+          expect(res.header['set-cookie']).toBeTruthy()
+        })
+    })
   })
 
   // GET /users/logout
@@ -101,7 +138,25 @@ describe('/users', () => {
         })
     })
     
-    it('should respond 302, create a new user, and redirect to /users/me', async () => {})
+    it(`should respond 302, hash password, create a new user,
+      token and cookie, then redirect to /users/me`, async () => {
+
+      const user = { email: 'user2@test.net', password: 'asdfASDF1234!@#$' }
+
+      await request(app)
+        .post('/users')
+        .send(user)
+        .expect(302)
+        .expect(res => {
+          expect(res.header.location).toEqual('/users/me')
+          expect(res.header['set-cookie']).toBeTruthy()
+        })
+
+      const foundUser = await User.findOne({ email: user.email })
+      expect(foundUser).toBeTruthy()
+      expect(foundUser.email).toEqual(user.email)
+      expect(foundUser.password).not.toEqual(user.password)
+    })
   })
 
   // GET /users
