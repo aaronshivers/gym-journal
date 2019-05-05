@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb')
 
 const app = require('../app')
 const Exercise = require('../models/exercises')
-const { User } = require('../models/users')
+const User = require('../models/users')
 
 describe('/exercises', () => {
 
