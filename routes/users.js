@@ -92,7 +92,31 @@ router.get('/users/me', auth, async (req, res) => {
 
     // send user data
     res.render('profile', { user })
+
+  } catch (error) {
+
+    // send error message
+    res.render('error', { msg: error.message })
+  }
+})
+
+// DELETE /users/me
+router.delete('/users/me', auth, async (req, res) => {
+
+  try {
     
+    // get user info
+    const { user } = req
+
+    // find and delete user
+    const deletedUser = await req.user.remove()
+
+    // send error message if user was not found
+    if (!deletedUser) return res.status(404).render('error', { msg: 'User Not Found' })
+
+    // delete cookie and redirect to /
+    res.status(302).clearCookie('token').redirect('/')
+
   } catch (error) {
 
     // send error message

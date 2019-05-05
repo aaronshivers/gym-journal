@@ -223,8 +223,36 @@ describe('/users', () => {
   // DELETE /users/me
   describe('DELETE /users/me', () => {
     
-    it('should respond 401 if user is NOT logged in', async () => {})
-    it('should respond 302, delete the user, cookie, and workouts, then redirect to /', async () => {})
+    it('should respond 401 if user is NOT logged in', async () => {
+
+      await request(app)
+        .delete('/users/me')
+        .expect(401)
+    })
+
+    it('should respond 302, delete the user, cookie, and workouts, then redirect to /', async () => {
+
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .delete(`/users/me`)
+        .set('Cookie', cookie)
+        .expect(302)
+        .expect(res => {
+          expect(res.header.location).toEqual('/')
+          expect(res.header['set-cookie'])
+            .toEqual(["token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"])
+        })
+
+      const user = await User.findById(users[0]._id)
+      expect(user).toBeFalsy()
+
+      // const exercises = await Exercises.find({ creator: users[0]._id })
+      // expect(exercises.length).toBe(0)
+
+      // const workouts = await Workouts.find({ creator: users[0]._id })
+      // expect(workouts.length).toBe(0)
+    })
   })
 
   // GET /users/login
