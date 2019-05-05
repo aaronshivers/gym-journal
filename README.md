@@ -17,5 +17,3 @@
 
 1. Run Tests
 * ```npm run test-watch```
-
-test
