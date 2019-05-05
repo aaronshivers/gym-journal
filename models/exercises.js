@@ -18,6 +18,10 @@ const exerciseSchema = new Schema({
     minlength: 3,
     maxlength: 200
   },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: {
     type: Date,
     default: Date.now,

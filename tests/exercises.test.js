@@ -4,23 +4,36 @@ const { ObjectId } = require('mongodb')
 
 const app = require('../app')
 const Exercise = require('../models/exercises')
+const { User } = require('../models/users')
 
 describe('/exercises', () => {
 
   beforeEach(async () => {
 
-    // delete all exercises
+    // delete all exercises and users
     await Exercise.deleteMany()
+    await User.deleteMany()
 
-    // users
+    // Create user object
+    const userObj = {
+      _id: new ObjectId(),
+      email: 'user@test.com',
+      password: 'asdfASDF1234!@#$'
+    }
+
+    const user = await new User(userObj).save()
+
+    // Create exercises
     const exercises = [{
       _id: new ObjectId(),
       name: 'Incline Bench Press',
-      description: 'Take the heavy thing, lift it, put it down, lift it, put it down, a certain number of times.'
+      description: 'Take the heavy thing, lift it, put it down, lift it, put it down, a certain number of times.',
+      creator: user._id
     }, {
       _id: new ObjectId(),
       name: 'Dead Lifts',
-      description: 'Great for getting good at lifting heavy things off the floor.'
+      description: 'Great for getting good at lifting heavy things off the floor.',
+      creator: user._id
     }]
 
     // save users
