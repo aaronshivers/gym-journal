@@ -20,15 +20,28 @@ describe('/users', () => {
     isAdmin: false
   }]
 
+  // tokens array
+  const tokens = []
+
   beforeEach(async () => {
 
     // delete all users
     await User.deleteMany()
 
-    // save users
-    await new User(users[0]).save()
-    await new User(users[1]).save()
+    // delete all tokens
+    tokens.length = 0
 
+    // save users
+    const user0 = await new User(users[0]).save()
+    const user1 = await new User(users[1]).save()
+
+    // create token
+    const token = user0.createAuthToken()
+
+    // add token to tokens array
+    tokens.push(token)
+
+    // return users
     return users
   })
 
@@ -162,9 +175,32 @@ describe('/users', () => {
   // GET /users
   describe('GET /users/me', () => {
     
-    it('should respond 401 if user is not logged in', async () => {})
-    it('should respond 400 if token is invalid', async () => {})
-    it('should respond 200 if user is logged in', async () => {})
+    it('should respond 401 if user is not logged in', async () => {
+
+      await request(app)
+        .get('/users/me')
+        .expect(401)
+    })
+
+    it('should respond 400 if token is invalid', async () => {
+
+      const cookie = `token=${ 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c' }`
+
+      await request(app)
+        .get('/users/me')
+        .set('Cookie', cookie)
+        .expect(400)
+    })
+
+    it('should respond 200 if user is logged in', async () => {
+
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .get('/users/me')
+        .set('Cookie', cookie)
+        .expect(200)
+    })
   })
 
   // GET /users/me/edit

@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/users')
 const userValidator = require('../middleware/userValidator')
 const validate = require('../middleware/validate')
+const auth = require('../middleware/auth')
 
 // POST /users
 router.post('/users', validate(userValidator), async (req, res) => {
@@ -75,6 +76,27 @@ router.post('/users/login', async (req, res) => {
   // send error message
   res.render('error', { msg: error.message })
 
+  }
+})
+
+// GET /users/me
+router.get('/users/me', auth, async (req, res) => {
+
+  try {
+
+    // find user by id
+    const user = await User.findById(req.user._id)
+
+    // reject if user is not found
+    if (!user) return res.status(404).render('error', { msg: 'User Not Found' })
+
+    // send user data
+    res.render('profile', { user })
+    
+  } catch (error) {
+
+    // send error message
+    res.render('error', { msg: error.message })
   }
 })
 
