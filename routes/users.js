@@ -124,4 +124,7 @@ router.delete('/users/me', auth, async (req, res) => {
   }
 })
 
+// GET /users/login
+router.get('/users/login', (req, res) => res.render('login'))
+
 module.exports = router

@@ -48,8 +48,12 @@ describe('/users', () => {
   // GET /users/login
   describe('GET /users/login', () => {
     
-    it('should respond 302, and redirect to /users/me, if user is already logged in', async () => {})
-    it('should respond 200', async () => {})
+    it('should respond 200', async () => {
+
+      await request(app)
+        .get('/users/login')
+        .expect(200)
+    })
   })
 
   // POST /users/login
@@ -253,14 +257,6 @@ describe('/users', () => {
       // const workouts = await Workouts.find({ creator: users[0]._id })
       // expect(workouts.length).toBe(0)
     })
-  })
-
-  // GET /users/login
-  describe('GET /users/login', () => {
-
-    it('should respond 401 if email is NOT in the DB', async () => {})
-    it('should respond 401 if password is NOT correct', async () => {})
-    // it('should respond 302, create token and cookie, and redirect to /users/me', async () => {})
   })
 
   // GET /users/logout
