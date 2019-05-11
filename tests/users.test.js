@@ -1,5 +1,6 @@
 const request = require('supertest')
 const expect = require('expect')
+const jwt = require('jsonwebtoken')
 const { ObjectId } = require('mongodb')
 
 const app = require('../app')
@@ -217,11 +218,123 @@ describe('/users', () => {
   // PATCH /users/me
   describe('PATCH /users/me', () => {
     
-    it('should respond 401, and NOT update user, if user is NOT logged in', async () => {})
-    it('should respond 400, and NOT update user, if email is invalid', async () => {})
-    it('should respond 400, and NOT update user, if password is invalid', async () => {})
-    it('should respond 400, and NOT update user, if new email already exists in the DB', async () => {})
-    it('should respond 302, update user, and redirect to /users/me', async () => {})
+    // get jwt secret from env
+    const secret = process.env.JWT_SECRET
+
+    // jwt options
+    const options = { maxAge: '1d' }
+
+    it('should respond 401, if user is NOT logged in', async () => {
+
+      await request(app)
+        .patch('/users/me')
+        .expect(401)
+    })
+
+    it('should respond 400, and NOT update user, if email is invalid', async () => {
+
+      const user = { email: 'asdf', password: 'asdfASDF1234!@#$' }
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .patch('/users/me')
+        .set('Cookie', cookie)
+        .send(user)
+        .expect(400)
+
+      // verify token against the secret
+      const decoded = await jwt.verify(tokens[0], secret, options)
+
+      // find user by id
+      const foundUser = await User.findById(decoded._id)
+
+      // found user id should equal decoded user id
+      expect(foundUser._id.toString()).toEqual(decoded._id)
+
+      // found user email should not equal decoded email
+      expect(foundUser.email).not.toEqual(decoded.email)
+    })
+
+    it('should respond 400, and NOT update user, if password is invalid', async () => {
+
+      const user = { email: 'user2@test.net', password: 'pass' }
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .patch('/users/me')
+        .set('Cookie', cookie)
+        .send(user)
+        .expect(400)
+
+      // verify token against the secret
+      const decoded = await jwt.verify(tokens[0], secret, options)
+
+      // find user by id
+      const foundUser = await User.findById(decoded._id)
+
+      // found user id should equal decoded user id
+      expect(foundUser._id.toString()).toEqual(decoded._id)
+
+      // found user email should not equal decoded email
+      expect(foundUser.email).not.toEqual(decoded.email)
+    })
+
+    it('should respond 400, and NOT update user, if new email already exists in the DB', async () => {
+
+      // existing email and password
+      const { email, password } = users[1]
+
+      // cookie with token
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .patch('/users/me')
+        .set('Cookie', cookie)
+        .send({ email, password })
+        .expect(400)
+
+      // verify token against the secret
+      const decoded = await jwt.verify(tokens[0], secret, options)
+
+      // find user by id
+      const foundUser = await User.findById(decoded._id)
+
+      // found user id should equal decoded user id
+      expect(foundUser._id.toString()).toEqual(decoded._id)
+
+      // found user email should not equal decoded email
+      expect(foundUser.email).not.toEqual(decoded.email)
+    })
+
+    it('should respond 302, update user, and redirect to /users/me', async () => {
+
+      const user = { email: 'user2@test.net', password: 'asdfASDF1234!@#$' }
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .patch('/users/me')
+        .set('Cookie', cookie)
+        .send(user)
+        .expect(302)
+        .expect(res => {
+          expect(res.header.location).toEqual('/users/me')
+        })
+
+      // verify token against the secret
+      const decoded = await jwt.verify(tokens[0], secret, options)
+
+      // find user by email
+      const foundUser = await User.findOne({ email: user.email })
+
+      // found user id should equal decoded user id
+      expect(foundUser._id.toString()).toEqual(decoded._id)
+
+      // found user email should equal provided email
+      expect(foundUser.email).toEqual(user.email)
+
+      // password should be hashed and not equal provided password
+      expect(foundUser.password).not.toEqual(user.password)
+    })
   })
 
   // DELETE /users/me

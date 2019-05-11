@@ -100,6 +100,47 @@ router.get('/users/me', auth, async (req, res) => {
   }
 })
 
+// PATCH /users/me
+router.patch('/users/me', [auth, validate(userValidator)], async (req, res) => {
+
+  try {
+
+    // get email and password
+    const { email, password } = req.body
+
+    // get user id
+    const { id } = req.user
+
+    // hash password
+    const saltRounds = 10
+    const hash = await bcrypt.hash(password, saltRounds)
+
+    // check for duplicate user
+    const duplicateUser = await User.findOne({ email })
+
+    // reject if duplicate user
+    if (duplicateUser) return res.status(400).render('error', { msg: 'User Already Exists' })
+
+    // set updates and options
+    const updates = { email, password: hash }
+    const options = { new: true, runValidators: true }
+
+    // update user
+    const user = await User.findByIdAndUpdate(id, updates, options)
+
+    // reject if no user is found
+    if (!user) return res.status(404).render('error', { msg: 'User Not Found' })
+
+    // redirect to users/profile
+    res.redirect(`/users/me`)
+
+  } catch {
+
+    // send error message
+    res.render('error', { msg: error.message })
+  }
+})
+
 // DELETE /users/me
 router.delete('/users/me', auth, async (req, res) => {
 
