@@ -223,8 +223,22 @@ describe('/users', () => {
   // GET /users/me/edit
   describe('GET /users/me/edit', () => {
     
-    it('should respond 401 if user is NOT logged in', async () => {})
-    it('should respond 200 if user is logged in', async () => {})
+    it('should respond 401 if user is NOT logged in', async () => {
+
+      await request(app)
+        .get(`/users/me/edit`)
+        .expect(401)
+    })
+
+    it('should respond 200 if user is logged in', async () => {
+
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .get(`/users/me/edit`)
+        .set('Cookie', cookie)
+        .expect(200)
+    })
   })
 
   // PATCH /users/me

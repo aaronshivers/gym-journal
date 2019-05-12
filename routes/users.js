@@ -175,4 +175,25 @@ router.delete('/users/logout', (req, res) => {
   res.clearCookie('token').redirect(`/`)
 })
 
+// GET /users/me/edit
+router.get('/users/me/edit', auth, async (req, res) => {
+
+  try {
+
+    // get user id
+    const { user } = req
+
+    // // find user by id
+    // const user = await User.findById(user._id)
+
+    // render edit page with user
+    res.render('edit', { user })
+
+  } catch (error) {
+
+    // send error message
+    res.render('error', { msg: error.message })
+  }
+})
+
 module.exports = router

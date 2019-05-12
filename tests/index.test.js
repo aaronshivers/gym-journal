@@ -3,7 +3,7 @@ const expect = require('expect')
 
 const app = require('../app')
 
-describe('/', () => {
+describe('GET /', () => {
   
   it('should respond 200', async () => {
   
