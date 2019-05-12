@@ -168,4 +168,11 @@ router.delete('/users/me', auth, async (req, res) => {
 // GET /users/login
 router.get('/users/login', (req, res) => res.render('login'))
 
+// DELETE /users/logout
+router.delete('/users/logout', (req, res) => {
+
+  // delete cookie and redirect to /
+  res.clearCookie('token').redirect(`/`)
+})
+
 module.exports = router

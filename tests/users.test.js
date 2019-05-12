@@ -94,17 +94,29 @@ describe('/users', () => {
         .post('/users/login')
         .send({ email, password })
         .expect(302)
-        .expect((res) => {
+        .expect(res => {
           expect(res.header.location).toEqual('/users/me')
           expect(res.header['set-cookie']).toBeTruthy()
         })
     })
   })
 
-  // GET /users/logout
-  describe('GET /users/logout', () => {
+  // DELETE /users/logout
+  describe('DELETE /users/logout', () => {
     
-    it('should logout user, delete auth token, and redirect to /', async () => {})
+    it('should logout user, delete auth token, and redirect to /', async () => {
+
+      const cookie = `token=${ tokens[0] }`
+
+      await request(app)
+        .delete('/users/logout')
+        .set('Cookie', cookie)
+        .expect(302)
+        .expect(res => {
+          expect(res.header.location).toEqual('/')
+          expect(res.header['set-cookie']).toEqual(["token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"])
+        })
+    })
   })
 
   // GET /users/signup
@@ -370,11 +382,5 @@ describe('/users', () => {
       // const workouts = await Workouts.find({ creator: users[0]._id })
       // expect(workouts.length).toBe(0)
     })
-  })
-
-  // GET /users/logout
-  describe('GET /users/logout', () => {
-
-    it('should respond 302, delete cookie, and redirect to /', async () => {})
   })
 })
