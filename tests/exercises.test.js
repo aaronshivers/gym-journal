@@ -8,6 +8,12 @@ const User = require('../models/users')
 
 describe('/exercises', () => {
 
+  // instantiate token
+  let token
+
+  // instantiate exercises array
+  let exercises = []
+
   beforeEach(async () => {
 
     // delete all exercises and users
@@ -23,8 +29,10 @@ describe('/exercises', () => {
 
     const user = await new User(userObj).save()
 
+    token = await user.createAuthToken()
+
     // Create exercises
-    const exercises = [{
+    exercises = [{
       _id: new ObjectId(),
       name: 'Incline Bench Press',
       description: 'Take the heavy thing, lift it, put it down, lift it, put it down, a certain number of times.',
@@ -43,13 +51,13 @@ describe('/exercises', () => {
 
   // POST /exercises
   describe('POST /exercises', () => {
+
+    const cookie = `token=${ token }`
     
     it('should respond 401, if user is NOT logged in', async () => {
-      const exercise = { name: 'sc', description: 'My favorite' }
 
       await request(app)
         .post('/exercises')
-        .send(exercise)
         .expect(401)
     })
 
@@ -58,11 +66,9 @@ describe('/exercises', () => {
 
       await request(app)
         .post('/exercises')
+        .set('Cookie', cookie)
         .send(exercise)
         .expect(400)
-        .expect(res => {
-          expect(res.header['set-cookie']).toBeFalsy()
-        })
     })
 
     it('should respond 400, and NOT create exercise, if description is invalid', async () => {
@@ -70,23 +76,22 @@ describe('/exercises', () => {
 
       await request(app)
         .post('/exercises')
+        .set('Cookie', cookie)
         .send(exercise)
         .expect(400)
-        .expect(res => {
-          expect(res.header['set-cookie']).toBeFalsy()
-        })
     })
 
     it('should respond 400, and NOT create exercise, if exercise already exists', async () => {
-      const exercise = { name: 'Incline Bench Press', description: 'favorite' }
+      const exercise = exercises[0]
 
       await request(app)
         .post('/exercises')
+        .set('Cookie', cookie)
         .send(exercise)
         .expect(400)
-        .expect(res => {
-          expect(res.header['set-cookie']).toBeFalsy()
-      })
+
+        const foundExercises = await Exercise.find(exercise)
+        expect(foundExercises.length).toBe(1)
     })
 
     it('should respond 302, create a new exercise, and redirect to /exercises', async () => {})
