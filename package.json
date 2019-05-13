@@ -4,6 +4,7 @@
   "description": "An application for tracking exercise progress.",
   "main": "app.js",
   "dependencies": {
+    "@hapi/joi": "^15.0.2",
     "bcrypt": "^3.0.6",
     "cookie-parser": "^1.4.4",
     "dotenv": "^7.0.0",
