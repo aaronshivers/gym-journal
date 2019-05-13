@@ -11,7 +11,6 @@
     "ejs": "^2.6.1",
     "expect": "^24.7.1",
     "express": "^4.16.4",
-    "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.4",
     "supertest": "^4.0.2"
